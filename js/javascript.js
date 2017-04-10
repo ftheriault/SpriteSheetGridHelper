@@ -13,6 +13,7 @@ var ctxResult = null;
 var currentRow = 0;
 var currentCol = 0;
 var aligned = 0;
+var blackListed = null;
 
 window.onload = function () {
 	cRaw = document.getElementById("raw");
@@ -40,6 +41,11 @@ window.onload = function () {
 	cRaw.onclick = function(evt) {
 		rawClicked(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop);
 	}
+
+	cRaw.onmousemove = function(evt) {
+		var color = ctxRaw.getImageData(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop, 1, 1).data;
+		document.getElementById("cursor-info").innerHTML = "Color : " + color[0] + ", " + color[1] + "," + color[2] + "";
+	}
 }
 
 function createCanvas() {
@@ -49,6 +55,14 @@ function createCanvas() {
 	rows = document.getElementById("rows").value;
 	width = document.getElementById("width").value;
 	height = document.getElementById("height").value;
+	blackListed = document.getElementById("blackListed").value;
+
+	if (blackListed.length > 0) {
+		blackListed = blackListed.split(",");		
+	}
+	else {
+		blackListed = null;
+	}
 
 	if (isNaN(cols)) errorMsg += " - Invalid rows number\n";
 	if (isNaN(rows)) errorMsg += " - Invalid rows number\n";
@@ -80,7 +94,8 @@ function createCanvas() {
 }
 
 function hasColor(col) {
-	return col[0] != 0 || col[1] != 0 || col[2] != 0 || col[3] != 0;
+	return (col[0] != 0 || col[1] != 0 || col[2] != 0 || col[3] != 0) &&
+		   (blackListed == null || (blackListed[0] != col[0] || blackListed[1] != col[1] || blackListed[2] != col[2]));
 }
 
 function rawClicked(baseX, baseY) {
@@ -125,20 +140,35 @@ function rawClicked(baseX, baseY) {
 					foundColor = true;
 				}
 
+				if (tileMaxY - tileMinY > height || tileMaxX - tileMinX > width) {
+					foundColor = false;
+					dir = 3;
+					break;
+				}
+
 				i++;
 			}
 		}
 	}
 	
 	// Transfer tile
-	var tmp = ctxRaw.getImageData(tileMinX,tileMinY,(tileMaxX - tileMinX),(tileMaxY - tileMinY));
-	var rX = (currentCol * width) + (width - (tileMaxX - tileMinX))/2;
-	var rY = 0;
+	for (var x = tileMinX; x <= tileMaxX; x++) {
+		for (var y = tileMinY; y <= tileMaxY; y++) {
+			var tmp = ctxRaw.getImageData(x,y, 1, 1).data;
+			var rX = (currentCol * width) + (width - (tileMaxX - tileMinX))/2 + (x - tileMinX);
+			var rY = 0;
 
-	if (aligned == 0) rY = (currentRow * height) + (height - (tileMaxY - tileMinY));
-	if (aligned == 1) rY = (currentRow * height) + (height - (tileMaxY - tileMinY))/2;
-	if (aligned == 2) rY = (currentRow * height);
-	ctxResult.putImageData(tmp,rX,rY);
+			if (aligned == 0) rY = (currentRow * height) + (height - (tileMaxY - tileMinY));
+			if (aligned == 1) rY = (currentRow * height) + (height - (tileMaxY - tileMinY))/2;
+			if (aligned == 2) rY = (currentRow * height) ;
+
+			if (hasColor(tmp)) {
+				ctxResult.putImageData(ctxRaw.getImageData(x,y, 1, 1), rX, rY + (y - tileMinY));
+			}
+		}
+	}
+
+	
 
 	currentCol++;
 
@@ -153,7 +183,6 @@ function eraseLast() {
 		if (currentRow > 0) {
 			currentRow--;
 			currentCol = cols - 1;
-
 		}
 
 	}

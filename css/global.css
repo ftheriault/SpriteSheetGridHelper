@@ -12,6 +12,10 @@ h1 {
 	width:1500px;
 }
 
+#cursor-info {
+	opacity:0.7;
+}
+
 .options {
 	background-color:#eee;
 	border:1px solid #999;
@@ -24,7 +28,7 @@ h1 {
 
 .options label {
 	display:inline-block;
-	width:150px;
+	width:400px;
 }
 
 .options input[type=text] {

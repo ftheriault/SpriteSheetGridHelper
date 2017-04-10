@@ -19,10 +19,13 @@
 				<label>Rows : </label><input type="text" value="7" id="rows">
 			</div>
 			<div>
-				<label>Tile Width </label><input type="text" value="65" id="width">
+				<label>Tile Width : </label><input type="text" value="65" id="width">
 			</div>
 			<div>
-				<label>Tile Height </label><input type="text" value="65" id="height">
+				<label>Tile Height : </label><input type="text" value="65" id="height">
+			</div>
+			<div>
+				<label>Optional : Black listed color (ex: background color) :</label><input type="text" style="width:100px" placeholder="Ex: 0, 255, 0" value="" id="blackListed">
 			</div>
 
 			<button type="button" id="btn-create">Create</button>
@@ -33,6 +36,7 @@
 				[ <a href="javascript:void(0)" onclick="eraseLast()">Erase last</a> ]
 				[ <a href="javascript:void(0)" onclick="newLine()">New line</a> ]
 				[ <a href="javascript:void(0)" onclick="changeAlign(this)">Aligned : bottom</a> ]
+				<span id="cursor-info"></span>
 			</div>
 			<div class="canvas-wrapper">
 				<canvas class="canvas" id="raw" width="720" height="500"></canvas>
