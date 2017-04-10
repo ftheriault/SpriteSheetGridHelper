@@ -7,23 +7,51 @@ h1 {
 	text-align:center;
 }
 
+html {
+	background-image: url('../images/background.png');
+	height:100%;
+}
+
 .container {
 	margin:10px auto;
-	width:1500px;
+	width:950px;
+	background-color:#fff;
+	border:1px solid #999;
+	border-radius:4px;
+	padding:10px;
 }
 
 #cursor-info {
 	opacity:0.7;
 }
 
-.options {
-	background-color:#eee;
-	border:1px solid #999;
-	padding:10px;
+#ctn p {
+	margin:20px 0;
 }
 
-.options div {
-	margin-bottom:10px;
+ul {
+	list-style-position: inside;
+	margin-left:10px;
+}
+
+ul li {
+	margin:10px 0;
+}
+
+.option-links {
+	margin-bottom:20px;
+}
+
+.text-center {
+	text-align:center;
+}
+
+.options>div {
+	margin-bottom:20px;
+}
+
+.options div div {
+	margin:10px;
 }
 
 .options label {

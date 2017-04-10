@@ -7,40 +7,53 @@
 		<script src="js/javascript.js"></script>
 	</head>
 	<body>
-		<h1>SpriteSheet Creator Tool</h1>
+		<div class="container">
+			<h1>SpriteSheet Creator Tool</h1>
+		</div>
+
 		<div class="container options" id="options">
 			<div>
-				<label>File : </label><input type="file" id="input-img">				
+				<label>Image File : </label><input type="file" id="input-img">				
 			</div>
 			<div>
-				<label>Cols : </label><input type="text" value="10" id="cols">
-			</div>
-			<div>
-				<label>Rows : </label><input type="text" value="7" id="rows">
-			</div>
-			<div>
-				<label>Tile Width : </label><input type="text" value="65" id="width">
-			</div>
-			<div>
-				<label>Tile Height : </label><input type="text" value="65" id="height">
-			</div>
-			<div>
-				<label>Optional : Black listed color (ex: background color) :</label><input type="text" style="width:100px" placeholder="Ex: 0, 255, 0" value="" id="blackListed">
+				In new spritesheet:
+				
+				<div>
+					<label>Number of columns : </label><input type="text" value="10" id="cols">
+				</div>
+				<div>
+					<label>Number of rows : </label><input type="text" value="7" id="rows">
+				</div>
+				<div>
+					<label>Tile Width : </label><input type="text" value="65" id="width">
+				</div>
+				<div>
+					<label>Tile Height : </label><input type="text" value="65" id="height">
+				</div>
 			</div>
 
-			<button type="button" id="btn-create">Create</button>
+			<div class="text-center">
+				<button type="button" id="btn-create">Create</button>				
+			</div>
 		</div>
 		<div class="container canvas-container" id="ctn">
-			<h2>Add each sprite to the sprite list by clicking on them. To save, right-click on the result image.</h2>
-			<div>
+			<h2>How it works...</h2>
+			<ul>
+				<li>Add each sprite to the sprite list by clicking on them.</li>
+				<li>To save, right-click on the result image.</li>
+				<li>To create another sprite sheet, <a href="">reload</a> the page!</li>
+			</ul>
+			
+			<p>You may need to zoom out your browser if your spritesheet is large.</p>
+			<div class="option-links">
 				[ <a href="javascript:void(0)" onclick="eraseLast()">Erase last</a> ]
 				[ <a href="javascript:void(0)" onclick="newLine()">New line</a> ]
 				[ <a href="javascript:void(0)" onclick="changeAlign(this)">Aligned : bottom</a> ]
 				<span id="cursor-info"></span>
 			</div>
 			<div class="canvas-wrapper">
-				<canvas class="canvas" id="raw" width="720" height="500"></canvas>
-				<canvas class="canvas" id="result" width="720" height="500"></canvas>
+				<canvas class="canvas" id="raw"></canvas>
+				<canvas class="canvas" id="result"></canvas>
 			</div>
 		</div>
 	</body>

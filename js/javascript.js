@@ -22,7 +22,11 @@ window.onload = function () {
 	ctxResult = cResult.getContext("2d");
 
 	document.getElementById('btn-create').onclick = function() {
-		createCanvas();
+		this.innerHTML = "Please wait...";
+
+		setTimeout(function () {
+			createCanvas();
+		}, 100)		
 	}
 
 	document.getElementById('input-img').onchange = function (evt) {
@@ -55,14 +59,6 @@ function createCanvas() {
 	rows = document.getElementById("rows").value;
 	width = document.getElementById("width").value;
 	height = document.getElementById("height").value;
-	blackListed = document.getElementById("blackListed").value;
-
-	if (blackListed.length > 0) {
-		blackListed = blackListed.split(",");		
-	}
-	else {
-		blackListed = null;
-	}
 
 	if (isNaN(cols)) errorMsg += " - Invalid rows number\n";
 	if (isNaN(rows)) errorMsg += " - Invalid rows number\n";
@@ -70,12 +66,10 @@ function createCanvas() {
 	if (isNaN(height)) errorMsg += " - Invalid height number\n";
 
 	if (imgRaw.width == 0) errorMsg += " - Invalid image\n"
-	if (imgRaw.width > cRaw.width) errorMsg += " - Image must be " + cRaw.width + "px wide maximum\n"
-
-	if (cols * width > cResult.width) errorMsg += " - Result image must be " + cResult.width + "px wide maximum\n"
 
 	if (errorMsg.length > 0) {
 		alert("Errors : \n" + errorMsg);
+		document.getElementById('btn-create').innerHTML = "Create";
 	}
 	else {
 		var rWidth = width * cols;
@@ -86,8 +80,43 @@ function createCanvas() {
 		ctxRaw.drawImage(imgRaw, 0, 0);
 
 		cResult.width = cols * width;
-		cResult.height = rows * height;
+		cResult.height = rows * height;	
 
+		var colors = new Array();
+
+		for (var x = 0; x < imgRaw.width; x++) {
+			for (var y = 0; y < imgRaw.height; y++) {
+				var color = ctxRaw.getImageData(x, y, 1, 1).data;
+				var key = color[0] + "-" + color[1] + "-" + color[2];
+
+				if (color[3] > 0) {
+					if (colors[key] == null) {
+						colors[key] = 0;
+					}
+
+					colors[key]++;
+				}
+			}
+		}
+
+		var colMax = null;
+
+		for (var i in colors) {
+			if (colMax == null) colMax = i;
+			
+			if (colors[i] > colors[colMax]) {
+				colMax = i;
+			}
+		}
+
+		if (colors[colMax] > imgRaw.width * imgRaw.height * 0.4) {
+			if (confirm("It seems like there is a background color. Remove that color from the resulting spritesheet?")) {
+				blackListed = colMax.split("-");
+			}
+		}
+
+		document.getElementById("ctn").style.width = cRaw.width + cResult.width + 20 + "px";
+		
 		document.getElementById("options").style.display="none";
 		document.getElementById("ctn").style.display="block";
 	}
