@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>SpriteSheet Creator</title>
+		<link rel="stylesheet" href="css/global.css">
+		<script src="js/javascript.js"></script>
+	</head>
+	<body>
+		<h1>SpriteSheet Creator Tool</h1>
+		<div class="container options" id="options">
+			<div>
+				<label>File : </label><input type="file" id="input-img">				
+			</div>
+			<div>
+				<label>Cols : </label><input type="text" value="10" id="cols">
+			</div>
+			<div>
+				<label>Rows : </label><input type="text" value="7" id="rows">
+			</div>
+			<div>
+				<label>Tile Width </label><input type="text" value="65" id="width">
+			</div>
+			<div>
+				<label>Tile Height </label><input type="text" value="65" id="height">
+			</div>
+
+			<button type="button" id="btn-create">Create</button>
+		</div>
+		<div class="container canvas-container" id="ctn">
+			<h2>Add each sprite to the sprite list by clicking on them. To save, right-click on the result image.</h2>
+			<div>
+				[ <a href="javascript:void(0)" onclick="eraseLast()">Erase last</a> ]
+				[ <a href="javascript:void(0)" onclick="newLine()">New line</a> ]
+				[ <a href="javascript:void(0)" onclick="changeAlign(this)">Aligned : bottom</a> ]
+			</div>
+			<div class="canvas-wrapper">
+				<canvas class="canvas" id="raw" width="720" height="500"></canvas>
+				<canvas class="canvas" id="result" width="720" height="500"></canvas>
+			</div>
+		</div>
+	</body>
+</html>

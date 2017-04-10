@@ -1,0 +1,49 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+h1 {
+	text-align:center;
+}
+
+.container {
+	margin:10px auto;
+	width:1500px;
+}
+
+.options {
+	background-color:#eee;
+	border:1px solid #999;
+	padding:10px;
+}
+
+.options div {
+	margin-bottom:10px;
+}
+
+.options label {
+	display:inline-block;
+	width:150px;
+}
+
+.options input[type=text] {
+	width:30px;
+	text-align:center;
+}
+
+.canvas {
+	margin:2px;
+	border:1px solid #999;
+}
+
+.canvas-wrapper {
+	align-items: flex-start;
+	display:flex;
+}
+
+.canvas-container {
+	display:none;
+	border:1px solid #999;
+	padding:10px;
+}
