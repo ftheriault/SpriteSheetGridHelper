@@ -20,13 +20,10 @@
 				<label>Image File : </label><input type="file" id="input-img">				
 			</div>
 			<div>
-				In new spritesheet:
+				In new spritesheet :
 
 				<div>
 					<label>Number of columns : </label><input type="text" value="10" id="cols">
-				</div>
-				<div>
-					<label>Number of rows : </label><input type="text" value="7" id="rows">
 				</div>
 				<div>
 					<label>Tile/Cell Width : </label><input type="text" value="65" id="width">
@@ -50,10 +47,21 @@
 			
 			<p>You may need to zoom out your browser if your spritesheet is large.</p>
 			<div class="option-links">
-				[ <a href="javascript:void(0)" onclick="eraseLast()">Erase last</a> ]
+				<div>Last Tile : </div>
+				[ <a href="javascript:void(0)" onclick="eraseLast()">Erase</a> ] 
+				<br>
+				<div>Move Tile (
+				<input type="text" id="mCol" value="0" style="border:0;width:25px;text-align:center" placeholder="Col">,
+				<input type="text" id="mRow" value="0" style="border:0;width:25px;text-align:center" placeholder="Row">) : </div> 
+				[ <a href="javascript:void(0)" onclick="moveTile(0, -1)">Move up</a> ]
+				[ <a href="javascript:void(0)" onclick="moveTile(0, 1)">Move down</a> ]
+				[ <a href="javascript:void(0)" onclick="moveTile(-1, 0)">Move left</a> ]
+				[ <a href="javascript:void(0)" onclick="moveTile(1, 0)">Move Right</a> ]
+				<br>
+				<div>Actions : </div>
 				[ <a href="javascript:void(0)" onclick="newLine()">New line</a> ]
-				[ <a href="javascript:void(0)" onclick="changeAlign(this)">Aligned : bottom</a> ]
-				<span id="cursor-info"></span>
+				[ <a href="javascript:void(0)" onclick="changeAlign(this)">Tiles Alignment : bottom</a> ] <br>
+				<div><span id="cursor-info"></span></div>
 			</div>
 			<div class="canvas-wrapper">
 				<canvas class="canvas" id="raw"></canvas>
