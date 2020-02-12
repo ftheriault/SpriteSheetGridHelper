@@ -26,16 +26,37 @@ window.onload = function () {
 
 		setTimeout(function () {
 			createCanvas();
-		}, 100)		
+		}, 100)
 	}
 
 	document.getElementById('input-img').onchange = function (evt) {
-    	var tgt = evt.target || window.event.srcElement; 
+    	var tgt = evt.target || window.event.srcElement;
 		var files = tgt.files;
 
 		if (FileReader && files && files.length) {
 			var fr = new FileReader();
 			fr.onload = function () {
+				imgRaw.src = fr.result;
+			}
+			fr.readAsDataURL(files[0]);
+		}
+	}
+
+	document.getElementById('input-new-img').onchange = function (evt) {
+    	var tgt = evt.target || window.event.srcElement;
+		var files = tgt.files;
+
+		if (FileReader && files && files.length) {
+
+			var fr = new FileReader();
+			fr.onload = function () {
+				imgRaw.onload = () => {
+					document.getElementById('new-img-section').style.display = "none";
+					document.getElementById("ctn").style.display="none";
+					setTimeout(() => {
+						createCanvas(false);
+					}, 100)
+				}
 				imgRaw.src = fr.result;
 			}
 			fr.readAsDataURL(files[0]);
@@ -52,7 +73,7 @@ window.onload = function () {
 	}
 }
 
-function createCanvas() {
+function createCanvas(resetResult = true) {
 	var errorMsg = "";
 
 	cols = document.getElementById("cols").value;
@@ -72,7 +93,7 @@ function createCanvas() {
 	else {
 		document.getElementById("mCol").value = "0";
 		document.getElementById("mRow").value = "0";
-		
+
 		var rWidth = width * cols;
 		var rHeight = height * cols;
 
@@ -80,8 +101,10 @@ function createCanvas() {
 		cRaw.height = imgRaw.height;
 		ctxRaw.drawImage(imgRaw, 0, 0);
 
-		cResult.width = cols * width;
-		cResult.height = rows * height;	
+		if (resetResult) {
+			cResult.width = cols * width;
+			cResult.height = rows * height;
+		}
 
 		var colors = new Array();
 
@@ -104,7 +127,7 @@ function createCanvas() {
 
 		for (var i in colors) {
 			if (colMax == null) colMax = i;
-			
+
 			if (colors[i] > colors[colMax]) {
 				colMax = i;
 			}
@@ -117,7 +140,7 @@ function createCanvas() {
 		}
 
 		document.getElementById("ctn").style.width = cRaw.width + cResult.width + 20 + "px";
-		
+
 		document.getElementById("options").style.display="none";
 		document.getElementById("ctn").style.display="block";
 	}
@@ -131,7 +154,7 @@ function hasColor(col) {
 function getTile(ctxSrc,baseX, baseY, scanForColor) {
 	if (scanForColor) {
 		var stop = false;
-		
+
 		for (var i = baseX; i < baseX + width; i+=4) {
 			for (var j = baseY; j < baseY + height; j+=4) {
 				if (hasColor(ctxSrc.getImageData(i, j, 1, 1).data)) {
@@ -155,7 +178,7 @@ function getTile(ctxSrc,baseX, baseY, scanForColor) {
 
 	for (var dir = 0 ; dir < 2; dir++) {
 		var foundColor = true;
-		
+
 		while (foundColor) {
 			foundColor = false;
 			var y = 0;
@@ -169,7 +192,7 @@ function getTile(ctxSrc,baseX, baseY, scanForColor) {
 				tileMaxY++;
 				y = tileMaxY;
 			}
-			
+
 			var i = tileMinX;
 
 			while (i <= tileMaxX) {
@@ -219,11 +242,11 @@ function setTile(ctxSrc, ctxDest, tileMinX, tileMaxX, tileMinY, tileMaxY) {
 				ctxResult.putImageData(ctxSrc.getImageData(x,y, 1, 1), rX, rY + (y - tileMinY));
 			}
 		}
-	}	
+	}
 }
 
 function rawClicked(baseX, baseY) {
-	var data = getTile(ctxRaw, baseX, baseY, false);	
+	var data = getTile(ctxRaw, baseX, baseY, false);
 	setTile(ctxRaw, ctxResult, data[0], data[1], data[2], data[3]);
 
 	document.getElementById("mCol").value = currentCol;
@@ -259,13 +282,13 @@ function eraseLast() {
 	var data = getLastCell();
 	currentCol = data[0];
 	currentRow = data[1];
-	
+
 	ctxResult.clearRect(currentCol * width, currentRow * height, width, height);
 
 	if (currentCol == cols - 1 && currentRow < rows - 1) {
 		var img = ctxResult.getImageData(0, 0, width * cols, height * rows);
 		rows--;
-		cResult.height = rows * height;	
+		cResult.height = rows * height;
 		ctxResult.putImageData(img, 0, 0);
 	}
 
@@ -279,7 +302,7 @@ function newLine() {
 	if (currentRow >= rows) {
 		var img = ctxResult.getImageData(0, 0, width * cols, height * rows);
 		rows++;
-		cResult.height = rows * height;	
+		cResult.height = rows * height;
 		ctxResult.putImageData(img, 0, 0);
 	}
 
@@ -304,13 +327,13 @@ function changeAlign(elem) {
 function moveTile(x, y) {
 	var tileCol = parseInt(document.getElementById("mCol").value);
 	var tileRow = parseInt(document.getElementById("mRow").value);
-	
+
 	if (!isNaN(tileCol) && !isNaN(tileRow) && tileCol >= 0 && tileRow >= 0 && tileCol < cols && tileRow < rows) {
-		var data = getTile(ctxResult, tileCol * width, tileRow * height, true);	
+		var data = getTile(ctxResult, tileCol * width, tileRow * height, true);
 
 		if (data[0] + x >= parseInt((tileCol) * width) && data[1] + x <= parseInt((tileCol + 1) * width) &&
 			data[2] + y >= parseInt((tileRow) * height) && data[3] + y <= parseInt((tileRow + 1) * height)) {
-					
+
 			var img = ctxResult.getImageData(tileCol * width, tileRow * height, width, height);
 			ctxResult.clearRect(tileCol * width, tileRow * height, width, height);
 			ctxResult.putImageData(img, tileCol * width + x, tileRow * height + y);

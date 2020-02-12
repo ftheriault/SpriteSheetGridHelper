@@ -86,3 +86,11 @@ ul li {
 	border:1px solid #999;
 	padding:10px;
 }
+
+#cursor-section {
+	height:20px;
+}
+
+#new-img-section {
+	display: none;
+}
