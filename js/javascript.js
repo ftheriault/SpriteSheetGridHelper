@@ -246,6 +246,11 @@ function setTile(ctxSrc, ctxDest, tileMinX, tileMaxX, tileMinY, tileMaxY) {
 }
 
 function rawClicked(baseX, baseY) {
+	if (currentCol >= cols) {
+		currentCol = 0;
+		newLine();
+	}
+
 	var data = getTile(ctxRaw, baseX, baseY, false);
 	setTile(ctxRaw, ctxResult, data[0], data[1], data[2], data[3]);
 
@@ -253,11 +258,6 @@ function rawClicked(baseX, baseY) {
 	document.getElementById("mRow").value = currentRow;
 
 	currentCol++;
-
-	if (currentCol >= cols) {
-		currentCol = 0;
-		newLine();
-	}
 }
 
 function getLastCell() {
@@ -285,7 +285,7 @@ function eraseLast() {
 
 	ctxResult.clearRect(currentCol * width, currentRow * height, width, height);
 
-	if (currentCol == cols - 1 && currentRow < rows - 1) {
+	if (currentCol == 0 && currentRow > 0) {
 		var img = ctxResult.getImageData(0, 0, width * cols, height * rows);
 		rows--;
 		cResult.height = rows * height;
