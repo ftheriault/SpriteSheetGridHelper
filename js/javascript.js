@@ -64,12 +64,45 @@ window.onload = function () {
 	}
 
 	cRaw.onclick = function(evt) {
-		rawClicked(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop);
+		if (!isDown) {
+			console.log("here")
+			rawClicked(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop);
+		}
+	}
+
+	let xDown = 0;
+	let yDown = 0;
+	let isDown = false;
+
+	cRaw.onmousedown = function (evt) {
+		xDown = evt.pageX - cRaw.offsetLeft;
+		yDown = evt.pageY - cRaw.offsetTop;
+		isDown = true;
+	}
+
+	cRaw.onmouseup = function (evt) {
+		let x = evt.pageX - cRaw.offsetLeft;
+		let y = evt.pageY - cRaw.offsetTop;
+		if (Math.abs(xDown - x) > 5 && Math.abs(yDown - y) > 5) {
+			let xMin = x < xDown ? x : xDown;
+			let yMin = y < yDown ? y : yDown;
+			let xMax = x > xDown ? x : xDown;
+			let yMax = y > yDown ? y : yDown;
+			rawClicked(xMin, xMax, yMin, yMax);
+		}
+
+		isDown = false;
+		cRaw.style.cursor = "default";
+
 	}
 
 	cRaw.onmousemove = function(evt) {
 		var color = ctxRaw.getImageData(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop, 1, 1).data;
 		document.getElementById("cursor-info").innerHTML = "Color : " + color[0] + ", " + color[1] + "," + color[2] + "";
+		console.log("ici")
+		if (isDown) {
+			cRaw.style.cursor = "crosshair";
+		}
 	}
 }
 
@@ -143,6 +176,9 @@ function createCanvas(resetResult = true) {
 
 		document.getElementById("options").style.display="none";
 		document.getElementById("ctn").style.display="block";
+
+		document.getElementById("how-to-info").style.width = "auto";
+		document.getElementById("how-to-info").innerHTML = "<strong>You can now click on a sprite frame to grab it's image. It is also possible to select a region to grab the image.</strong>";
 	}
 }
 
@@ -245,14 +281,19 @@ function setTile(ctxSrc, ctxDest, tileMinX, tileMaxX, tileMinY, tileMaxY) {
 	}
 }
 
-function rawClicked(baseX, baseY) {
+function rawClicked(baseX, baseY, maxX = null, maxY = null) {
 	if (currentCol >= cols) {
 		currentCol = 0;
 		newLine();
 	}
 
-	var data = getTile(ctxRaw, baseX, baseY, false);
-	setTile(ctxRaw, ctxResult, data[0], data[1], data[2], data[3]);
+	if (maxX == null) {
+		var data = getTile(ctxRaw, baseX, baseY, false);
+		setTile(ctxRaw, ctxResult, data[0], data[1], data[2], data[3]);
+	}
+	else {
+		setTile(ctxRaw, ctxRaw, baseX, baseY, maxX, maxY);
+	}
 
 	document.getElementById("mCol").value = currentCol;
 	document.getElementById("mRow").value = currentRow;
