@@ -65,7 +65,6 @@ window.onload = function () {
 
 	cRaw.onclick = function(evt) {
 		if (!isDown) {
-			console.log("here")
 			rawClicked(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop);
 		}
 	}
@@ -83,23 +82,26 @@ window.onload = function () {
 	cRaw.onmouseup = function (evt) {
 		let x = evt.pageX - cRaw.offsetLeft;
 		let y = evt.pageY - cRaw.offsetTop;
+
 		if (Math.abs(xDown - x) > 5 && Math.abs(yDown - y) > 5) {
 			let xMin = x < xDown ? x : xDown;
 			let yMin = y < yDown ? y : yDown;
 			let xMax = x > xDown ? x : xDown;
 			let yMax = y > yDown ? y : yDown;
 			rawClicked(xMin, xMax, yMin, yMax);
+			setTimeout(() => isDown = false, 10);
+		}
+		else {
+			isDown = false;
 		}
 
-		isDown = false;
-		cRaw.style.cursor = "default";
-
+		setTimeout(() => cRaw.style.cursor = "default", 10);
 	}
 
 	cRaw.onmousemove = function(evt) {
 		var color = ctxRaw.getImageData(evt.pageX - cRaw.offsetLeft, evt.pageY - cRaw.offsetTop, 1, 1).data;
 		document.getElementById("cursor-info").innerHTML = "Color : " + color[0] + ", " + color[1] + "," + color[2] + "";
-		console.log("ici")
+
 		if (isDown) {
 			cRaw.style.cursor = "crosshair";
 		}
